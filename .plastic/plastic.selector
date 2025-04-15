@@ -1,0 +1,4 @@
+repository "BallStrike@nati4455@cloud"
+  path "/"
+    br "/main"
+    co "/main"
