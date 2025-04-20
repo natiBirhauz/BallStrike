@@ -6,6 +6,7 @@ public class PointsBall : MonoBehaviour
     private Rigidbody rb;
     public float forwardSpeed = 500f;
     private GameManager gameManager;
+    private bool hasBeenHit = false; // Flag to track if the ball has been hit
 
     public void Initialize(EnemySpawner spawner)
     {
@@ -28,11 +29,13 @@ public class PointsBall : MonoBehaviour
 
     public void Hit()
     {
+        // Prevent multiple hits
+        if (hasBeenHit) return;
+        hasBeenHit = true;
+        
         if (gameManager != null)
         {
-            gameManager.increaceScore(1000);
-            Debug.LogError("Score increased by 1000!");
-
+            gameManager.increaceScore(100000);
         }
         Respawn();
     }

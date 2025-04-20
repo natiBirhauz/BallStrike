@@ -64,10 +64,7 @@ private void OnCollisionEnter(Collision collision)
     }
         else if (collision.gameObject.CompareTag("PointsBall"))
     {
-        Debug.LogError("pointsBall hit! points before: " + gm.playerScore);
         collision.gameObject.GetComponent<PointsBall>().Hit();
-        Debug.LogError("pointsBall hit! points: " + gm.playerScore);
-
     }
 }
 

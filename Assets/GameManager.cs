@@ -14,7 +14,9 @@ public class GameManager : MonoBehaviour
      public EnemySpawner enemySpawner; // Reference to the enemy spawner
 
      public GameObject LevelUpCanvas; // Assign a UI panel in the Inspector
+    public static GameManager Instance;
 
+    
     void Start()
     {
         if (healthUI == null)
@@ -94,28 +96,22 @@ public class GameManager : MonoBehaviour
         if (scoreUI != null && player != null)
         {
             scoreUI.UpdateScoreDisplay(playerScore);
-            Debug.Log("Score updated to: " + player.transform.position.z);
         }
-        else
-        {
-            Debug.LogWarning("Score UI or player not assigned in GameManager.");
-        }
+
     }
-    public void increaceScore(int scoreAmount)
+public void increaceScore(int scoreAmount)
+{
+    playerScore += scoreAmount;
+    
+    if (scoreUI != null && player != null)
     {
-        if (scoreUI != null && player != null)
-        {
-            scoreUI.UpdateScoreDisplay(player.transform.position.z);
-        }
-        else
-        {
-            playerScore += scoreAmount; // Changed variable name to avoid shadowing
-        }
-        
-        if (playerScore < 0)
-        {
-            playerScore = 0;
-        }
+        scoreUI.UpdateScoreDisplay(playerScore); 
+    }
+    
+    if (playerScore < 0)
+    {
+        playerScore = 0;
+    }
     }
     
     private bool levelUpCooldown = false; // Prevent double triggers
@@ -152,4 +148,5 @@ void HideLevelUpCanvas()
         Debug.LogError("Image component not found on LevelUpCanvas!");
     }
 }
+
 }

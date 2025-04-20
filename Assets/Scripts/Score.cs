@@ -11,8 +11,18 @@ public class Score : MonoBehaviour
             scoreText = GetComponent<TextMeshProUGUI>();
     }
 
+    private string FormatScore(int score)
+    {
+        if (score >= 1000000)
+            return "Score:"+(score / 1000000f).ToString("0.#") + "M";
+        if (score >= 1000)
+            return "Score:"+(score / 1000f).ToString("0.#") + "K";
+        return score.ToString();
+    }
+
     public void UpdateScoreDisplay(float score)
     {
-        scoreText.SetText("Score: " + score.ToString("0"));
+        int roundedScore = Mathf.FloorToInt(score); // round down to nearest int
+        scoreText.text = FormatScore(roundedScore);
     }
 }
