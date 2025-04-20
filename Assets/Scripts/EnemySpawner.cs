@@ -1,11 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum BallType
+{
+    Enemy,
+    Health,
+    Points
+}
+
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyBallPrefab;
     public GameObject healthBallPrefab;
-    public float healthBallChance = 0.5f;
+    public GameObject pointsBallPrefab;
+    public float healthBallChance = 0.1f;  // 10%
+    public float pointsBallChance = 0.2f;  // 20%
 
     public Transform player;
     private GameManager gameManager;
@@ -17,8 +26,18 @@ public class EnemySpawner : MonoBehaviour
     public float spawnRangeX = 4f;
     public float minDistanceBetweenBalls = 5f;
 
+    private Dictionary<BallType, GameObject> ballPrefabs;
+
     void Start()
     {
+        // Initialize ball prefabs dictionary
+        ballPrefabs = new Dictionary<BallType, GameObject>
+        {
+            { BallType.Enemy, enemyBallPrefab },
+            { BallType.Health, healthBallPrefab },
+            { BallType.Points, pointsBallPrefab }
+        };
+
         gameManager = Object.FindFirstObjectByType<GameManager>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         player.position = new Vector3(0, 1, 0);
@@ -36,43 +55,71 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-public void ReplaceBall(BallType type)
-{
-    Vector3 spawnPos = GetValidSpawnPosition();
-
-    GameObject prefab = type switch
+    public void ReplaceBall(BallType type)
     {
-        BallType.Health => healthBallPrefab,
-        BallType.Enemy => enemyBallPrefab,
-        _ => enemyBallPrefab
-    };
+        Vector3 spawnPos = GetValidSpawnPosition();
 
-    GameObject newBall = Instantiate(prefab, spawnPos, Quaternion.identity);
+        if (!ballPrefabs.TryGetValue(type, out GameObject prefab))
+        {
+            Debug.LogError($"No prefab found for ball type: {type}");
+            return;
+        }
 
-    if (type == BallType.Health && newBall.TryGetComponent<HealthBall>(out var health))
-    {
-        health.Initialize(this);
+        GameObject newBall = Instantiate(prefab, spawnPos, Quaternion.identity);
+
+        switch (type)
+        {
+            case BallType.Health:
+                if (newBall.TryGetComponent<HealthBall>(out var health))
+                {
+                    health.Initialize(this);
+                }
+                break;
+            case BallType.Enemy:
+                if (newBall.TryGetComponent<EnemyBall>(out var enemy))
+                {
+                    enemy.Initialize(this);
+                }
+                break;
+            case BallType.Points:
+                if (newBall.TryGetComponent<PointsBall>(out var points))
+                {
+                    points.Initialize(this);
+                }
+                break;
+        }
+
+        activeBalls.Add(newBall);
     }
-    else if (type == BallType.Enemy && newBall.TryGetComponent<EnemyBall>(out var enemy))
+
+    public void ReplaceBall()
     {
-        enemy.Initialize(this);
+        // Randomly select ball type based on probability
+        float randomValue = Random.value;
+        BallType type;
+
+        if (randomValue < healthBallChance)
+        {
+            type = BallType.Health;
+        }
+        else if (randomValue < healthBallChance + pointsBallChance)
+        {
+            type = BallType.Points;
+        }
+        else
+        {
+            type = BallType.Enemy;
+        }
+
+        ReplaceBall(type);
     }
-
-    activeBalls.Add(newBall);
-}
-public void ReplaceBall()
-{
-    BallType type = Random.value < 0.1f ? BallType.Health : BallType.Enemy;
-    ReplaceBall(type);
-}
-
 
     private void InitializeBallPool(int count)
     {
         for (int i = 0; i < count * 5; i++)
         {
-            BallType type = Random.value < healthBallChance ? BallType.Health : BallType.Enemy;
-            ReplaceBall(type);
+            // Use the overloaded ReplaceBall method that handles random selection
+            ReplaceBall();
         }
     }
 

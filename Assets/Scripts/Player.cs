@@ -62,6 +62,13 @@ private void OnCollisionEnter(Collision collision)
     {
         collision.gameObject.GetComponent<HealthBall>().Hit();
     }
+        else if (collision.gameObject.CompareTag("PointsBall"))
+    {
+        Debug.LogError("pointsBall hit! points before: " + gm.playerScore);
+        collision.gameObject.GetComponent<PointsBall>().Hit();
+        Debug.LogError("pointsBall hit! points: " + gm.playerScore);
+
+    }
 }
 
 }

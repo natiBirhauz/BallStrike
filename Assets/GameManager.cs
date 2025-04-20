@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("Score UI or player not assigned in GameManager.");
         }
     }
-        private void increaceScore(int score)
+    public void increaceScore(int scoreAmount)
     {
         if (scoreUI != null && player != null)
         {
@@ -109,8 +109,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            playerScore += score;
+            playerScore += scoreAmount; // Changed variable name to avoid shadowing
         }
+        
         if (playerScore < 0)
         {
             playerScore = 0;

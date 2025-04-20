@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HealthBall : MonoBehaviour
+public class PointsBall : MonoBehaviour
 {
     private EnemySpawner spawner;
     private Rigidbody rb;
@@ -26,21 +26,16 @@ public class HealthBall : MonoBehaviour
         }
     }
 
-private bool hasHit = false;
-
-public void Hit()
-{
-    if (hasHit) return;
-    hasHit = true;
-
-    if (gameManager != null)
+    public void Hit()
     {
-        gameManager.IncreasePlayerHealth();
+        if (gameManager != null)
+        {
+            gameManager.increaceScore(1000);
+            Debug.LogError("Score increased by 1000!");
+
+        }
+        Respawn();
     }
-
-    Respawn();
-}
-
 
     public void Respawn()
     {
