@@ -9,6 +9,19 @@ TagManager:
   - Health
   - HealthBall
   - PointsBall
+  - Ground1
+  - Ground2
+  - IceBall
+  - FireBall
+  - Undefined
+  - Star
+  - GameManager
+  - MagnetBall
+  - Pause
+  - MainManu
+  - Ground
+  - GameModeButton
+  - ballTextAnimationToChange
   layers:
   - Default
   - TransparentFX

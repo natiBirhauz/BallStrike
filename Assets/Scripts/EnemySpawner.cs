@@ -5,16 +5,25 @@ public enum BallType
 {
     Enemy,
     Health,
-    Points
+    Points,
+    Ice,
+    Fire,
+    Magnet
 }
 
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyBallPrefab;
     public GameObject healthBallPrefab;
+    public GameObject MagnetBallPrefab;
+    public GameObject IceBallPrefab; // Assuming IceBall is another type of ball
     public GameObject pointsBallPrefab;
+        public GameObject FireBallPrefab; // Assuming FireBall is another type of ball
     public float healthBallChance = 0.1f;  // 10%
     public float pointsBallChance = 0.2f;  // 20%
+    public float fireBallChance = 0.1f; // 10% chance for FireBall
+    public float iceBallChance = 0.1f; // 10% chance for IceBall
+    public float magnetBallChance = 0.1f; // 10% chance for MagnetBall
 
     public Transform player;
     private GameManager gameManager;
@@ -24,7 +33,7 @@ public class EnemySpawner : MonoBehaviour
     public float spawnDistanceZ = 100f;
     public float spawnRangeZ = 100f;
     public float spawnRangeX = 4f;
-    public float minDistanceBetweenBalls = 5f;
+    public float minDistanceBetweenBalls = 2f;
 
     private Dictionary<BallType, GameObject> ballPrefabs;
 
@@ -35,7 +44,10 @@ public class EnemySpawner : MonoBehaviour
         {
             { BallType.Enemy, enemyBallPrefab },
             { BallType.Health, healthBallPrefab },
-            { BallType.Points, pointsBallPrefab }
+            { BallType.Points, pointsBallPrefab },
+            { BallType.Ice, IceBallPrefab },
+            { BallType.Fire, FireBallPrefab },
+            { BallType.Magnet, MagnetBallPrefab } 
         };
 
         gameManager = Object.FindFirstObjectByType<GameManager>();
@@ -87,6 +99,24 @@ public class EnemySpawner : MonoBehaviour
                     points.Initialize(this);
                 }
                 break;
+            case BallType.Ice:
+                if (newBall.TryGetComponent<IceBall>(out var ice))
+                {
+                    ice.Initialize(this);
+                }
+                break;
+            case BallType.Fire:
+                if (newBall.TryGetComponent<FireBall>(out var Fire))
+                {
+                    Fire.Initialize(this);
+                }
+                break;
+                            case BallType.Magnet:
+                if (newBall.TryGetComponent<MagnetBall>(out var Magnet))
+                {
+                    Magnet.Initialize(this);
+                }
+                break;
         }
 
         activeBalls.Add(newBall);
@@ -105,6 +135,18 @@ public class EnemySpawner : MonoBehaviour
         else if (randomValue < healthBallChance + pointsBallChance)
         {
             type = BallType.Points;
+        }
+        else if (randomValue < healthBallChance + pointsBallChance+iceBallChance)
+        {
+            type = BallType.Ice;
+        }
+        else if (randomValue < healthBallChance + pointsBallChance + iceBallChance + fireBallChance)
+        {
+            type = BallType.Fire;
+        }
+        else if (randomValue < healthBallChance + pointsBallChance + iceBallChance + fireBallChance + magnetBallChance)
+        {
+            type = BallType.Magnet;
         }
         else
         {
@@ -147,5 +189,16 @@ public class EnemySpawner : MonoBehaviour
                 return false;
         }
         return true;
+    }
+
+    internal void ResetEnemyBalls()
+    {
+        foreach (var ball in activeBalls)
+        {
+            if (ball != null)
+                Destroy(ball);
+        }
+        activeBalls.Clear();
+        InitializeBallPool(gameManager.level);
     }
 }

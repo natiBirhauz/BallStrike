@@ -7,7 +7,7 @@ public class CameraFollow : MonoBehaviour
 
     void Update()
     {
-        // Follow the player with the set offset
+
         transform.position = player.position + offset;
     }
 }

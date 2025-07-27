@@ -3,23 +3,20 @@ using UnityEngine;
 public class PointsBall : MonoBehaviour
 {
     private EnemySpawner spawner;
-    private Rigidbody rb;
-    public float forwardSpeed = 500f;
+    public float forwardSpeed = 10f;
+    private bool initialized = false;
     private GameManager gameManager;
-    private bool hasBeenHit = false; // Flag to track if the ball has been hit
-
     public void Initialize(EnemySpawner spawner)
     {
         this.spawner = spawner;
-        gameManager = Object.FindFirstObjectByType<GameManager>();
-        rb = GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.back * forwardSpeed * Time.deltaTime, ForceMode.Force);
+        initialized = true;
     }
 
     void FixedUpdate()
     {
-        if (rb == null) return;
-        rb.AddForce(Vector3.back * forwardSpeed * Time.deltaTime, ForceMode.Force);
+        if (!initialized || spawner == null || spawner.player == null ||!GameStateManager.Instance.IsPlaying()) return;
+
+        transform.position += Vector3.back * forwardSpeed * Time.deltaTime;
 
         if (transform.position.y < -5f || transform.position.z < spawner.player.position.z - 20f)
         {
@@ -29,20 +26,17 @@ public class PointsBall : MonoBehaviour
 
     public void Hit()
     {
-        // Prevent multiple hits
-        if (hasBeenHit) return;
-        hasBeenHit = true;
-        
-        if (gameManager != null)
-        {
-            gameManager.increaceScore(100000);
-        }
+        if (gameManager == null)
+        gameManager = Object.FindFirstObjectByType<GameManager>();
+        gameManager.AddPoints(200);
+        AudioManager.Instance?.PlaySFX(AudioManager.Instance.pointsBallSource);
+        Debug.Log("PointsBall Hit! Points added.");
         Respawn();
     }
 
     public void Respawn()
     {
         Destroy(gameObject);
-        spawner.ReplaceBall();
+        spawner?.ReplaceBall();
     }
 }
