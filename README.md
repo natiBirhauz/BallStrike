@@ -23,15 +23,15 @@ _A fast-paced 3D arcade dodging game built with Unity as part of the Master's de
 
 ## 🎯 Ball Types
 
-| Ball | Color | Effect |
-|------|-------|--------|
-| 🔴 Red Ball | Red     | -1 HP (damage) |
-| 🟡 Yellow Ball | Yellow  | +1 HP (heal) |
-| 🔵 Ice Ball | Blue    | Slows player for 2 sec |
-| 🟠 Fire Ball | Orange  | Speeds player for 2 sec |
-| 🟣 Points Ball | Purple | +200 points |
-| 🟢 Green Star | Green   | Activates magnet to pull nearby stars |
-| ✨ Star | White  | +500 points |
+| Ball  | Effect |
+|------|--------|
+| 🔴 Red Ball     | -1 HP (damage) |
+| 🟡 Yellow Ball   | +1 HP (heal) |
+| 🔵 Ice Ball     | Slows player|
+| 🟠 Fire Ball   | Speeds player |
+| 🟣 Points Ball  | +200 points |
+| 🟢 Green Star   | Activates magnet to pull nearby stars |
+| ✨ Star  | +500 points |
 
 ---
 
