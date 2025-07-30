@@ -53,7 +53,7 @@ _A fast-paced 3D arcade dodging game built with Unity as part of the Master's de
 ## 🖼️ Screenshots
 
 
-```markdown
+
 ![Gameplay](images/gameplay1.png)
 ![Gameplay](images/gameplay.png)
 ![Main Menu](images/menu.png)
